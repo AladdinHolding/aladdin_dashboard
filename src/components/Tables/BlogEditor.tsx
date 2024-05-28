@@ -3,26 +3,37 @@ import { blogs } from "@/lib/options";
 import Image from "next/image";
 import LanguageTranslation from "./LanguageTranslation";
 import toast from "react-hot-toast";
+import { Props } from "react-apexcharts";
 
-const AddBlog: React.FC = () => {
-  const [blog, setBlog] = useState({
-    id: blogs.length,
-    imageUrl: "/images/blogs/blog-01.png",
-    isMain: false,
-    blogTranslations: [],
-  });
-  const [image, setImage] = useState("/images/blogs/sample.jpg");
-
+const BlogEditor: React.FC<Props> = ({ blog, editMode }) => {
+  const [eblog, setBlog] = useState(
+    blog
+      ? blog
+      : {
+          id: blogs.length,
+          imageUrl: "/images/blogs/sample.jpg",
+          isMain: false,
+          blogTranslations: [],
+        },
+  );
+  console.log(eblog);
   const toggleHandle = (from: string) => {
-    if (from === "add") {
-      toast.success("Blog is created!");
+    if (from === "main"){
+      setBlog({
+        ...eblog,
+        isMain: !eblog.isMain,
+      })
     }
-    if (from === "main") {
-      setBlog((prevBlog) => ({
-        ...prevBlog,
-        isMain: !prevBlog.isMain,
-      }));
+    else if(blog){
+      blog = eblog
+      toast.success('BLOG UPDATED!')
+      editMode = false;
     }
+    else{
+      blogs.push(eblog);
+      toast.success('BLOG Created!')
+    }
+
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +42,10 @@ const AddBlog: React.FC = () => {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         if (typeof reader.result === "string") {
-          setImage(reader.result);
+          setBlog({
+            ...eblog,
+            imageUrl: reader.result,
+          });
         }
       });
       reader.readAsDataURL(files[0]);
@@ -42,7 +56,7 @@ const AddBlog: React.FC = () => {
     <>
       <td>
         <label htmlFor="uploadImg">
-          <Image src={image} width={60} height={50} alt="Blog" />
+          <Image src={eblog.imageUrl} width={60} height={50} alt="Blog" />
         </label>
 
         <input
@@ -55,24 +69,22 @@ const AddBlog: React.FC = () => {
         />
       </td>
       <td className="flex">
-        {
-        blog.blogTranslations.map((index) => (
-          <LanguageTranslation key={index} />
-        ))}
+        {/* {eblog.blogTranslations.map((key) => (
+          <LanguageTranslation key={key} />
+        ))} */}
       </td>
       <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
         <button
-          onClick={() => toggleHandle("main")}
+          onClick={() => toggleHandle('main')}
           className="font-medium text-black dark:text-white"
         >
-          {blog.isMain ? "True" : "False"}
+          {eblog.isMain ? "True" : "False"}
         </button>
       </td>
-
       <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
         <div className="flex items-center space-x-3.5">
           <button
-            onClick={() => toggleHandle("add")}
+            onClick={() => toggleHandle("edit")}
             className="hover:text-primary"
           >
             <svg
@@ -95,4 +107,4 @@ const AddBlog: React.FC = () => {
   );
 };
 
-export default AddBlog;
+export default BlogEditor;

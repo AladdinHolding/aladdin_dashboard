@@ -5,9 +5,9 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { Blogs } from "@/types/blogs";
 import { blogs } from "@/lib/options";
-import UpdateBlog from "./AddBlog";
+import UpdateBlog from "./BlogEditor";
 import Blog from "./Blog";
-import AddBlog from "./AddBlog";
+import AddBlog from "./BlogEditor";
 
 const TableTwo = () => {
   let a: Blogs;
@@ -82,7 +82,6 @@ const TableTwo = () => {
             {addMode ? (
               <>
                 <AddBlog></AddBlog>
-                
               </>
             ) : null}
             {blogDum.map((blogs, key) => (

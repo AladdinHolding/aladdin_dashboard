@@ -5,6 +5,8 @@ import { Props } from "react-apexcharts";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import LanguageTranslation from "./LanguageTranslation";
+import AddBlog from "./BlogEditor";
+import BlogEditor from "./BlogEditor";
 
 const Blog: React.FC<Props> = ({ blog }) => {
   const [editMode, setEditMode] = useState(false);
@@ -36,79 +38,44 @@ const Blog: React.FC<Props> = ({ blog }) => {
 
   return (
     <>
-      <td>
-        <label htmlFor="uploadImg">
-          <Image src={image} width={60} height={50} alt="Blog" />
-        </label>
-
-        {editMode ? (
-          <>
-            <input
-              name="uploadImg"
-              id="uploadImg"
-              className="hidden"
-              type="file"
-              accept="image/png, image/gif, image/jpeg"
-              onChange={handleFileUpload}
-            />
-          </>
-        ) : null}
-      </td>
-      <td className="flex">
-        {blog.blogTranslations.map((translations: any) => (
-          <>
-            {editMode ? (
-              <>
-                <LanguageTranslation
-                  languageTranslation={translations}
-                  blog={blog}
-                ></LanguageTranslation>
-        
-              </>
-            ) : (
-              <p className="m-2">{translations.languageCode}</p>
-            )}
-          </>
-        ))}
-      </td>
       {editMode ? (
-        <>
-          <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-            <button
-              onClick={() => toggleHandle("main")}
-              className="font-medium text-black dark:text-white"
-            >
-              {isMainT}
-            </button>
-          </td>
-        </>
+        <BlogEditor blog={blog} editMode={editMode}></BlogEditor>
       ) : (
         <>
-          <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-            <h5 className="font-medium">{isMainT}</h5>
+          <td>
+            <label htmlFor="uploadImg">
+              <Image src={image} width={60} height={50} alt="Blog" />
+            </label>
           </td>
+          <td className="flex">
+            {blog.blogTranslations.map((translations: any) => (
+              <>
+                <p className="m-2">{translations.languageCode}</p>
+              </>
+            ))}
+          </td>
+          <>
+            <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+              <h5 className="font-medium">{isMainT}</h5>
+            </td>
+          </>
         </>
       )}
-      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-        <div className="flex items-center space-x-3.5">
-          <button
-            onClick={() => toggleHandle("edit")}
-            className="hover:text-primary"
-          >
-            <svg
-              className="fill-current"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+      {editMode ? null : (
+        <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+          <div className="flex items-center space-x-3.5">
+            <button
+              onClick={() => toggleHandle("edit")}
+              className="hover:text-primary"
             >
-              {editMode ? (
-                <path
-                  d="M6.75 11.25L3.75 8.25L2.25 9.75L6.75 14.25L15.75 5.25L14.25 3.75L6.75 11.25Z"
-                  fill="currentColor"
-                />
-              ) : (
+              <svg
+                className="fill-current"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <>
                   <path
                     d="M8.99981 14.8219C3.43106 14.8219 0.674805 9.50624 0.562305 9.28124C0.47793 9.11249 0.47793 8.88749 0.562305 8.71874C0.674805 8.49374 3.43106 3.20624 8.99981 3.20624C14.5686 3.20624 17.3248 8.49374 17.4373 8.71874C17.5217 8.88749 17.5217 9.11249 17.4373 9.28124C17.3248 9.50624 14.5686 14.8219 8.99981 14.8219ZM1.85605 8.99999C2.4748 10.0406 4.89356 13.5562 8.99981 13.5562C13.1061 13.5562 15.5248 10.0406 16.1436 8.99999C15.5248 7.95936 13.1061 4.44374 8.99981 4.44374C4.89356 4.44374 2.4748 7.95936 1.85605 8.99999Z"
@@ -119,11 +86,11 @@ const Blog: React.FC<Props> = ({ blog }) => {
                     fill=""
                   />
                 </>
-              )}
-            </svg>
-          </button>
-        </div>
-      </td>
+              </svg>
+            </button>
+          </div>
+        </td>
+      )}
     </>
   );
 };
