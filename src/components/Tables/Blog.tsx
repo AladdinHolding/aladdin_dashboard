@@ -2,50 +2,23 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Props } from "react-apexcharts";
-import toast from "react-hot-toast";
-import Swal from "sweetalert2";
-import LanguageTranslation from "./LanguageTranslation";
-import AddBlog from "./BlogEditor";
 import BlogEditor from "./BlogEditor";
 
 const Blog: React.FC<Props> = ({ blog }) => {
   const [editMode, setEditMode] = useState(false);
-  const [isMainT, setIsmain] = useState(blog.isMain ? "True" : "False");
-  const [image, setImage] = useState(blog.imageUrl);
+  const isMainT = blog.isMain ? "True" : "False";
+  const image = blog.imageUrl;
 
-  const toggleHandle = (from: string) => {
-    if (from == "edit") {
-      if (editMode) {
-        toast.success("Edit is Successfull!");
-      }
-      setEditMode(!editMode);
-    }
-    if (from == "main") {
-      blog.isMain = !blog.isMain;
-      setIsmain(blog.isMain ? "True" : "False");
-    }
-  };
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImage(reader.result);
-      });
-      reader.readAsDataURL(files[0]);
-    }
+  const edit = () => {
+    setEditMode(true);
   };
 
   return (
     <>
-      {editMode ? (
-        <BlogEditor blog={blog} editMode={editMode}></BlogEditor>
-      ) : (
+    <BlogEditor blog={blog} editMode={editMode} setEditMode={setEditMode}></BlogEditor>
         <>
           <td>
-            <label htmlFor="uploadImg">
               <Image src={image} width={60} height={50} alt="Blog" />
-            </label>
           </td>
           <td className="flex">
             {blog.blogTranslations.map((translations: any) => (
@@ -60,12 +33,10 @@ const Blog: React.FC<Props> = ({ blog }) => {
             </td>
           </>
         </>
-      )}
-      {editMode ? null : (
         <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
           <div className="flex items-center space-x-3.5">
             <button
-              onClick={() => toggleHandle("edit")}
+              onClick={() => edit()}
               className="hover:text-primary"
             >
               <svg
@@ -90,7 +61,6 @@ const Blog: React.FC<Props> = ({ blog }) => {
             </button>
           </div>
         </td>
-      )}
     </>
   );
 };

@@ -1,25 +1,27 @@
 "use client";
-import Image from "next/image";
-import { Product } from "@/types/product";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { Blogs } from "@/types/blogs";
 import { blogs } from "@/lib/options";
-import UpdateBlog from "./BlogEditor";
 import Blog from "./Blog";
-import AddBlog from "./BlogEditor";
+import BlogEditor from "./BlogEditor";
 
 const TableTwo = () => {
-  let a: Blogs;
-  const [blogDum, setBlogs] = useState(blogs);
   const [editMode, setEditMode] = useState(false);
-  const [addMode, setAddMode] = useState(false);
+  const [blogDum, setBlogs] = useState(blogs);
+
   console.log(blogDum);
 
-  const toggleHandle = (from: string) => {
-    console.log(a);
-    from === "add" ? setAddMode(!addMode) : setEditMode(!editMode);
-  };
+  const toggleHandle = (from: string, editBlog: any) => {
+    console.log("hi from edittt");
+    console.log(editBlog);
+    Swal.fire({
+        title: "Edit Blog",
+
+        focusConfirm: false,
+        confirmButtonText: "Okatt",
+    });
+};
+
 
   const deleteHandle = (id: number) => {
     Swal.fire({
@@ -50,13 +52,12 @@ const TableTwo = () => {
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
         <div className="flex items-center justify-center p-2.5 xl:p-5">
-          <button
-            onClick={() => toggleHandle("add")}
-            className="font-medium text-meta-3"
-          >
-            Add
-          </button>
+          <>
+          </>
         </div>
+        <BlogEditor editMode={editMode} setEditMode={setEditMode}></BlogEditor>
+        <button onClick={()=>setEditMode(true)} className="cursor-pointer m-2 rounded bg-primary px-4 py-2 text-white">Add</button>
+
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -78,16 +79,15 @@ const TableTwo = () => {
               </th>
             </tr>
           </thead>
+          <BlogEditor blog={blogDum[3]}></BlogEditor>
+
           <tbody>
-            {addMode ? (
-              <>
-                <AddBlog></AddBlog>
-              </>
-            ) : null}
             {blogDum.map((blogs, key) => (
               <>
+              
                 <tr>
                   <Blog key={key} blog={blogs} />
+
                   <td>
                     <button
                       onClick={() => deleteHandle(blogs.id)}

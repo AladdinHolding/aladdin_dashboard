@@ -22,7 +22,8 @@ const SignUp: React.FC = () => {
           <div className="hidden w-full xl:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
               <Link className="mb-5.5 inline-block" href="/">
-                Logo
+              <Image src={'/images/logos/logo.png'} width={100} height={100} alt={""}/>
+
               </Link>
               <p className="2xl:px-20">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit

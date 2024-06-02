@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { blogs } from "@/lib/options";
 import Image from "next/image";
-import LanguageTranslation from "./LanguageTranslation";
 import toast from "react-hot-toast";
 import { Props } from "react-apexcharts";
+import { BlogTranslations, Blogs } from "@/types/blogs";
 
-const BlogEditor: React.FC<Props> = ({ blog, editMode }) => {
-  const [eblog, setBlog] = useState(
+const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
+  const [eblog, setBlog] = useState<Blogs>(
     blog
       ? blog
       : {
@@ -16,24 +16,67 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode }) => {
           blogTranslations: [],
         },
   );
-  console.log(eblog);
-  const toggleHandle = (from: string) => {
-    if (from === "main"){
-      setBlog({
+  const submitHandle = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (blog) {
+      const updatedBlogs = [...blogs];
+      updatedBlogs[blog.id] = {
         ...eblog,
-        isMain: !eblog.isMain,
-      })
-    }
-    else if(blog){
-      blog = eblog
-      toast.success('BLOG UPDATED!')
-      editMode = false;
-    }
-    else{
+      };
+      console.log(updatedBlogs);
+      toast.success("blog edited successfully");
+    } else {
       blogs.push(eblog);
-      toast.success('BLOG Created!')
+      toast.success("blog added successfully");
     }
+    setEditMode(false);
+  };
+  const toggleHandle = () => {
+    setBlog({
+      ...eblog,
+      isMain: !eblog.isMain,
+    });
+  };
+  const handleTranslationChange = (
+    index: number,
+    field: string,
+    value: string,
+  ) => {
+    const updatedTranslations = [...eblog.blogTranslations];
+    updatedTranslations[index] = {
+      ...updatedTranslations[index],
+      [field]: value,
+    };
+    setBlog({
+      ...eblog,
+      blogTranslations: updatedTranslations,
+    });
+  };
 
+  const handleTranslationDeleteOp = (index: number) => {
+    const updatedTranslations = [...eblog.blogTranslations];
+    updatedTranslations.splice(index, 1);
+    setBlog({
+      ...eblog,
+      blogTranslations: updatedTranslations,
+    });
+  };
+
+  const addTranslation = () => {
+    const newTranslation:BlogTranslations = {
+      languageCode: "",
+      title: "",
+      description: "",
+    };
+    const updatedTranslations: BlogTranslations[] = [
+      ...eblog.blogTranslations,
+      newTranslation,
+    ];
+
+    setBlog({
+      ...eblog,
+      blogTranslations: updatedTranslations,
+    });
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,57 +96,116 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode }) => {
   };
 
   return (
-    <>
-      <td>
-        <label htmlFor="uploadImg">
-          <Image src={eblog.imageUrl} width={60} height={50} alt="Blog" />
-        </label>
-
-        <input
-          name="uploadImg"
-          id="uploadImg"
-          className="hidden"
-          type="file"
-          accept="image/png, image/gif, image/jpeg"
-          onChange={handleFileUpload}
-        />
-      </td>
-      <td className="flex">
-        {/* {eblog.blogTranslations.map((key) => (
-          <LanguageTranslation key={key} />
-        ))} */}
-      </td>
-      <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-        <button
-          onClick={() => toggleHandle('main')}
-          className="font-medium text-black dark:text-white"
-        >
-          {eblog.isMain ? "True" : "False"}
-        </button>
-      </td>
-      <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-        <div className="flex items-center space-x-3.5">
-          <button
-            onClick={() => toggleHandle("edit")}
-            className="hover:text-primary"
-          >
-            <svg
-              className="fill-current"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6.75 11.25L3.75 8.25L2.25 9.75L6.75 14.25L15.75 5.25L14.25 3.75L6.75 11.25Z"
-                fill="currentColor"
+    <div
+      className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center justify-items-center bg-black bg-opacity-25 backdrop-blur-sm`}
+    >
+      <div className="dark:bg-gray-800 rounded-lg bg-white p-6">
+        <form onSubmit={submitHandle}>
+          <div className="space-y-6">
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 block text-sm font-medium">
+                Image
+              </label>
+              <label htmlFor="uploadImg" className="cursor-pointer">
+                <Image
+                  src={eblog.imageUrl}
+                  width={300}
+                  height={300}
+                  alt="Blog"
+                  className="mt-2 cursor-pointer"
+                />
+                <input
+                  name="uploadImg"
+                  id="uploadImg"
+                  className="hidden"
+                  type="file"
+                  accept="image/png, image/gif, image/jpeg"
+                  onChange={handleFileUpload}
+                />
+              </label>
+            </div>
+            <div>
+              <label className="text-gray-700 dark:text-gray-300 block text-sm font-medium">
+                Is Main?
+              </label>
+              <input
+                onClick={toggleHandle}
+                className="cursor-pointer rounded bg-primary px-4 py-2 text-white"
+                type="button"
+                value={eblog.isMain ? "Yes" : "No"}
               />
-            </svg>
-          </button>
-        </div>
-      </td>
-    </>
+            </div>
+            <input
+              type="button"
+              onClick={() => addTranslation()}
+              value={"Add"}
+            />
+            <div className="m-2 flex justify-center">
+              {eblog.blogTranslations.map((translation, index) => (
+                <div className="m-2 space-y-3" key={index}>
+                  <input
+                    className="text-sm	"
+                    type="button"
+                    onClick={() => handleTranslationDeleteOp(index)}
+                    value={"X"}
+                  />
+                  <div>
+                    <input
+                      type="text"
+                      value={translation.languageCode}
+                      onChange={(e) =>
+                        handleTranslationChange(
+                          index,
+                          "languageCode",
+                          e.target.value,
+                        )
+                      }
+                      placeholder="Language Code"
+                      className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                    />
+                    <input
+                      type="text"
+                      value={translation.title}
+                      onChange={(e) =>
+                        handleTranslationChange(index, "title", e.target.value)
+                      }
+                      placeholder="Title"
+                      className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                    />
+                  </div>
+                  <textarea
+                    rows={6}
+                    value={translation.description}
+                    onChange={(e) =>
+                      handleTranslationChange(
+                        index,
+                        "description",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Description"
+                    className="form-textarea border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                  ></textarea>
+                </div>
+              ))}
+            </div>
+            <div className="flex ">
+              <input
+                className="m-2 cursor-pointer rounded bg-primary px-4 py-2 text-white"
+                type="submit"
+                value={"Save"}
+              />
+              <input
+                onClick={() => setEditMode(false)}
+                className="m-2 cursor-pointer rounded bg-red px-4 py-2 text-white"
+                value={"Cancel"}
+                type="button"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 
