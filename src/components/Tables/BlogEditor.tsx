@@ -99,7 +99,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
     <div
       className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center justify-items-center bg-black bg-opacity-25 backdrop-blur-sm`}
     >
-      <div className="dark:bg-gray-800 rounded-lg bg-white p-6">
+      <div className="dark:bg-gray-800 rounded-lg h-800 bg-white p-6">
         <form onSubmit={submitHandle}>
           <div className="space-y-6">
             <div>

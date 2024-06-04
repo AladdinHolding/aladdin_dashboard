@@ -1,27 +1,15 @@
 "use client";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { blogs } from "@/lib/options";
+import { blogs, categories } from "@/lib/options";
 import Blog from "./Blog";
 import BlogEditor from "./BlogEditor";
+import CategoryEditor from "./CategoryEditor";
+import Category from "./Category";
 
-const TableTwo = () => {
+const CategoryTable = () => {
   const [editMode, setEditMode] = useState(false);
-  const [blogDum, setBlogs] = useState(blogs);
-
-  console.log(blogDum);
-
-  const toggleHandle = (from: string, editBlog: any) => {
-    console.log("hi from edittt");
-    console.log(editBlog);
-    Swal.fire({
-        title: "Edit Blog",
-
-        focusConfirm: false,
-        confirmButtonText: "Okatt",
-    });
-};
-
+  const [categoryDum, setCategories] = useState(categories);
 
   const deleteHandle = (id: number) => {
     Swal.fire({
@@ -34,10 +22,10 @@ const TableTwo = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        const update = blogDum.filter((i) => i.id !== id);
+        const updatedCategories = [...categoryDum];
+        updatedCategories.splice(id, 1);
+        setCategories(updatedCategories);
         console.log(id);
-        console.log(update);
-        setBlogs(update);
         Swal.fire({
           title: "Deleted!",
           text: "Your file has been deleted.",
@@ -52,24 +40,24 @@ const TableTwo = () => {
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
         <div className="flex items-center justify-center p-2.5 xl:p-5">
-          <>
-          </>
+          <></>
         </div>
-        <BlogEditor editMode={editMode} setEditMode={setEditMode}></BlogEditor>
-        <button onClick={()=>setEditMode(true)} className="cursor-pointer m-2 rounded bg-primary px-4 py-2 text-white">Add</button>
+        <CategoryEditor editMode={editMode} setEditMode={setEditMode}></CategoryEditor>
+        <button
+          onClick={() => setEditMode(true)}
+          className="m-2 cursor-pointer justify-center rounded bg-primary px-4 py-2 text-white"
+        >
+          Add
+        </button>
 
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
               <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
-                Blog Photo
+                Id
               </th>
               <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                 Language
-              </th>
-
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Main
               </th>
               <th className="px-4 py-4 font-medium text-black dark:text-white">
                 Update
@@ -79,18 +67,15 @@ const TableTwo = () => {
               </th>
             </tr>
           </thead>
-          <BlogEditor blog={blogDum[3]}></BlogEditor>
 
           <tbody>
-            {blogDum.map((blogs, key) => (
+            {categoryDum.map((categories, index) => (
               <>
-              
                 <tr>
-                  <Blog key={key} blog={blogs} />
-
+                  <Category category={categories}/>
                   <td>
                     <button
-                      onClick={() => deleteHandle(blogs.id)}
+                      onClick={() => deleteHandle(index)}
                       className="hover:text-primary"
                     >
                       <svg
@@ -130,4 +115,4 @@ const TableTwo = () => {
   );
 };
 
-export default TableTwo;
+export default CategoryTable;

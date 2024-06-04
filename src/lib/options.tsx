@@ -1,4 +1,5 @@
 import { Blogs } from "@/types/blogs";
+import { Category } from "@/types/category";
 
 const blogs: Blogs[] = [
   {
@@ -56,6 +57,38 @@ const blogs: Blogs[] = [
   },
 ];
 
+const categories: Category[] = [
+  {
+    id: 1,
+    categoryTranslations: [
+      {
+        languageCode: "en",
+        name: "English Category 1",
+      },
+      {
+        languageCode: "ru",
+        name: "Ru Category 1",
+      },
+    ],
+  },
+  {
+    id: 2,
+    categoryTranslations: [
+      {
+        languageCode: "en",
+        name: "English Category 2",
+      },
+    ],
+  },
+  {
+    id: 3,
+    categoryTranslations: [
+      {
+        languageCode: "ru",
+        name: "Ru Category 2",
+      },
+    ],
+  },
+];
 
-
-export {blogs}
+export { blogs, categories };
