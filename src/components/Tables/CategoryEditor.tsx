@@ -39,7 +39,7 @@ const CategoryEditor: React.FC<Props> = ({ category, setEditMode, editMode }) =>
   };
 
   const handleTranslationDeleteOp = (index: number) => {
-    const updatedTranslations = [...eCategory.blogTranslations];
+    const updatedTranslations = [...eCategory.categoryTranslations];
     updatedTranslations.splice(index, 1);
     setCategory({
       ...eCategory,
@@ -53,9 +53,10 @@ const CategoryEditor: React.FC<Props> = ({ category, setEditMode, editMode }) =>
       name: "",
     };
     const updatedTranslations: CategoryTranslation[] = [
-      ...eCategory.blogTranslations,
+      ...eCategory.categoryTranslations,
       newTranslation,
     ];
+    console.log(updatedTranslations);
 
     setCategory({
       ...eCategory,
@@ -74,6 +75,7 @@ const CategoryEditor: React.FC<Props> = ({ category, setEditMode, editMode }) =>
             
             <input
               type="button"
+              className="cursor-pointer"
               onClick={() => addTranslation()}
               value={"Add"}
             />
