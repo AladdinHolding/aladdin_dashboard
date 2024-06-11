@@ -3,7 +3,7 @@ import { Category } from "@/types/category";
 
 const blogs: Blogs[] = [
   {
-    id: 0,
+    id: 1,
     imageUrl: "/images/blogs/blog-01.png",
     isMain: false,
     blogTranslations: [
@@ -15,7 +15,7 @@ const blogs: Blogs[] = [
     ],
   },
   {
-    id: 1,
+    id: 2,
     imageUrl: "/images/blogs/blog-02.png",
     isMain: false,
     blogTranslations: [
@@ -27,7 +27,7 @@ const blogs: Blogs[] = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     imageUrl: "/images/blogs/blog-03.png",
     isMain: false,
     blogTranslations: [
@@ -39,7 +39,7 @@ const blogs: Blogs[] = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     imageUrl: "/images/blogs/blog-01.png",
     isMain: false,
     blogTranslations: [

@@ -1,23 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { blogs } from "@/lib/options";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { Props } from "react-apexcharts";
 import { BlogTranslations, Blogs } from "@/types/blogs";
+import { useGetBlogsByIdQuery } from "../../../global/api/testApi";
 
 const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
+  const { data, isLoading, error } = useGetBlogsByIdQuery(1);
   const [eblog, setBlog] = useState<Blogs>(
     blog
       ? blog
       : {
           id: blogs.length,
-          imageUrl: "/images/blogs/sample.jpg",
+          imageUrl:'/images/blogs/sample.jpg',
           isMain: false,
           blogTranslations: [],
         },
   );
+  useEffect(()=>{
+    console.log(eblog)
+  },[eblog])
   const submitHandle = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(data)
+    console.log(error)
     if (blog) {
       const updatedBlogs = [...blogs];
       updatedBlogs[blog.id] = {
@@ -87,8 +94,8 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
         if (typeof reader.result === "string") {
           setBlog({
             ...eblog,
-            imageUrl: reader.result,
-          });
+            imageUrl:  reader.result
+          })
         }
       });
       reader.readAsDataURL(files[0]);
@@ -99,8 +106,11 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
     <div
       className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center justify-items-center bg-black bg-opacity-25 backdrop-blur-sm`}
     >
-      <div className="dark:bg-gray-800 rounded-lg h-800 bg-white p-6">
-        <form onSubmit={submitHandle}>
+      <div
+        className="dark:bg-gray-800 overflow-y-auto w-1/4  flex-col items-center  
+               justify-center   justify-items-center rounded-lg  border bg-white p-6 text-center"
+      >
+        <form className="justify-items-center" onSubmit={submitHandle}>
           <div className="space-y-6">
             <div>
               <label className="text-gray-700 dark:text-gray-300 block text-sm font-medium">
@@ -112,7 +122,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
                   width={300}
                   height={300}
                   alt="Blog"
-                  className="mt-2 cursor-pointer"
+                  className="mt-2 cursor-pointer items-center justify-center"
                 />
                 <input
                   name="uploadImg"
@@ -140,7 +150,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
               onClick={() => addTranslation()}
               value={"Add"}
             />
-            <div className="m-2 flex justify-center">
+            <div className="m-2 flex flex-wrap">
               {eblog.blogTranslations.map((translation, index) => (
                 <div className="m-2 space-y-3" key={index}>
                   <input

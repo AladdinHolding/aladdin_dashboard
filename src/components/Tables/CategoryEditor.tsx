@@ -4,21 +4,31 @@ import { useState } from "react";
 import { Props } from "react-apexcharts";
 import toast from "react-hot-toast";
 
-const CategoryEditor: React.FC<Props> = ({ category, setEditMode, editMode }) => {
+const CategoryEditor: React.FC<Props> = ({
+  category,
+  setEditMode,
+  editMode,
+}) => {
   const [eCategory, setCategory] = useState(
     category
       ? category
       : {
-          id: categories.length,
+          id: categories.length+1,
           categoryTranslations: [],
         },
   );
-  const submitHandler = () => {
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (category) {
-        toast.success("Category updated successfully");
+      toast.success("Category updated successfully");
     } else {
-        categories.push(eCategory);
-        toast.success("Category added successfully");
+      categories.push(eCategory);
+      setCategory({
+        id: categories.length+1,
+        categoryTranslations: [],
+      })
+      toast.success("Category added successfully");
     }
     setEditMode(false);
   };
@@ -66,72 +76,77 @@ const CategoryEditor: React.FC<Props> = ({ category, setEditMode, editMode }) =>
 
   return (
     <>
-        <div
-      className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center justify-items-center bg-black bg-opacity-25 backdrop-blur-sm`}
-    >
-      <div className="dark:bg-gray-800 rounded-lg h-800 bg-white p-6">
-        <form onSubmit={submitHandler}>
-          <div className="space-y-6">
-            
-            <input
-              type="button"
-              className="cursor-pointer"
-              onClick={() => addTranslation()}
-              value={"Add"}
-            />
-            <div className="m-2 flex justify-center">
-              {eCategory.categoryTranslations.map((translation:CategoryTranslation, index:number) => (
-                <div className="m-2 space-y-3" key={index}>
-                  <input
-                    className="text-sm	"
-                    type="button"
-                    onClick={() => handleTranslationDeleteOp(index)}
-                    value={"X"}
-                  />
-                  <div>
-                    <input
-                      type="text"
-                      value={translation.languageCode}
-                      onChange={(e) =>
-                        handleTranslationChange(
-                          index,
-                          "languageCode",
-                          e.target.value,
-                        )
-                      }
-                      placeholder="Language Code"
-                      className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-                    />
-                    <input
-                      type="text"
-                      value={translation.name}
-                      onChange={(e) =>
-                        handleTranslationChange(index, "name", e.target.value)
-                      }
-                      placeholder="Name"
-                      className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex ">
+      <div
+        className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center justify-items-center bg-black bg-opacity-25 backdrop-blur-sm`}
+      >
+        <div className="dark:bg-gray-800 h-800 rounded-lg bg-white p-6">
+          <form onSubmit={submitHandler}>
+            <div className="space-y-6">
               <input
-                className="m-2 cursor-pointer rounded bg-primary px-4 py-2 text-white"
-                type="submit"
-                value={"Save"}
-              />
-              <input
-                onClick={() => setEditMode(false)}
-                className="m-2 cursor-pointer rounded bg-red px-4 py-2 text-white"
-                value={"Cancel"}
                 type="button"
+                className="cursor-pointer"
+                onClick={() => addTranslation()}
+                value={"Add"}
               />
+              <div className="m-2 flex justify-center">
+                {eCategory.categoryTranslations.map(
+                  (translation: CategoryTranslation, index: number) => (
+                    <div className="m-2 space-y-3" key={index}>
+                      <input
+                        className="text-sm	"
+                        type="button"
+                        onClick={() => handleTranslationDeleteOp(index)}
+                        value={"X"}
+                      />
+                      <div>
+                        <input
+                          type="text"
+                          value={translation.languageCode}
+                          onChange={(e) =>
+                            handleTranslationChange(
+                              index,
+                              "languageCode",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Language Code"
+                          className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                        />
+                        <input
+                          type="text"
+                          value={translation.name}
+                          onChange={(e) =>
+                            handleTranslationChange(
+                              index,
+                              "name",
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Name"
+                          className="form-input border-gray-300 dark:border-gray-700 mt-1 block w-full rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                        />
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+              <div className="flex ">
+                <input
+                  className="m-2 cursor-pointer rounded bg-primary px-4 py-2 text-white"
+                  type="submit"
+                  value={"Save"}
+                />
+                <input
+                  onClick={() => setEditMode(false)}
+                  className="m-2 cursor-pointer rounded bg-red px-4 py-2 text-white"
+                  value={"Cancel"}
+                  type="button"
+                />
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
     </>
   );
 };

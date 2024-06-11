@@ -15,15 +15,15 @@ const Blog: React.FC<Props> = ({ blog }) => {
 
   return (
     <>
-    <BlogEditor blog={blog} editMode={editMode} setEditMode={setEditMode}></BlogEditor>
+    <BlogEditor blog={blog} editMode={editMode} setEditMode={setEditMode} key={blog.id}></BlogEditor>
         <>
           <td>
               <Image src={image} width={60} height={50} alt="Blog" />
           </td>
           <td className="flex">
-            {blog.blogTranslations.map((translations: any) => (
+            {blog.blogTranslations.map((translations: any,index:number) => (
               <>
-                <p className="m-2">{translations.languageCode}</p>
+                <p key={index} className="m-2">{translations.languageCode}</p>
               </>
             ))}
           </td>

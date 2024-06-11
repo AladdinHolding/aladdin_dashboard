@@ -70,8 +70,8 @@ const BlogTable = () => {
             {blogDum.map((blogs, index) => (
               <>
               
-                <tr>
-                  <Blog key={index} blog={blogs} />
+                <tr key={index} >
+                  <Blog key={blogs.id} blog={blogs} />
 
                   <td>
                     <button

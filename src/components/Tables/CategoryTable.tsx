@@ -72,12 +72,12 @@ const CategoryTable = () => {
             {categoryDum.map((categories, index) => (
               <>
                 <tr>
-                  <Category category={categories}/>
+                  <Category key={categories.id}  category={categories}/>
                   <td>
                     <button
                       onClick={() => deleteHandle(index)}
                       className="hover:text-primary"
-                    >
+                    > 
                       <svg
                         className="fill-current"
                         width="18"
