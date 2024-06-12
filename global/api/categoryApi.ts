@@ -6,60 +6,68 @@ export const categoryApi = createApi({
   reducerPath: "categories",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://aladdincreative-001-site1.btempurl.com/api/v1/Category/",
+    prepareHeaders: (headers, { getState }) => {
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4MTc4ODUwLCJleHAiOjE3MTgxODI0NTAsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.SKTnsSU3gd0M5norTPuBFa1wXR34tsGQz8ro4jDbLtc')
+      return headers;
+    },
   }),
+  tagTypes: ['Blogs','Categories'],
   endpoints: (builder) => ({
     getAllCategories: builder.query<Category[], void>({
       query: () => ({
         url: "GetAll",
         method: "GET",
       }),
+      providesTags: ['Categories'],
     }),
-    getBlogsByCategoryId: builder.query<Blogs[], void>({
+    getBlogsByCategoryId: builder.query<Blogs[], number>({
       query: (id) => ({
         url: `GetBlogsByCategoyId`,
         method: "GET",
         params: { id },
       }),
+      providesTags: ['Categories'],
     }),
-    getCategoryById: builder.query<Category, void>({
+    getCategoryById: builder.query<Category, number>({
       query: (id) => ({
         url: `GetById`,
         method: "GET",
         params: { id },
       }),
     }),
-    updateCategory: builder.mutation<Category, void>({
+    updateCategory: builder.mutation<Category, Category>({
       query: (body) => ({
         url: `Update`,
-        method: "POST",
+        method: "PUT",
         body,
-        formData: true,
       }),
+      invalidatesTags:['Categories']
     }),
-    addCategory: builder.mutation<Category, void>({
+    addCategory: builder.mutation<Category, any>({
       query: (body) => ({
         url: `Create`,
         method: "POST",
         body,
-        formData: true,
+        
       }),
+      invalidatesTags:['Categories']
     }),
-    deleteCategory: builder.mutation<any, void>({
+    deleteCategory: builder.mutation<any, number>({
       query: (id) => ({
         url: `Delete`,
         method: "Delete",
         params: { id },
       }),
+      invalidatesTags:['Categories']
     }),
   }),
 });
 
-
 export const {
   useAddCategoryMutation,
   useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
   useGetAllCategoriesQuery,
   useGetBlogsByCategoryIdQuery,
   useGetCategoryByIdQuery,
-  useUpdateCategoryMutation,
 } = categoryApi;

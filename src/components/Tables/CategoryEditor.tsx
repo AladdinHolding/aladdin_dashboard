@@ -3,31 +3,51 @@ import { CategoryTranslation } from "@/types/category";
 import { useState } from "react";
 import { Props } from "react-apexcharts";
 import toast from "react-hot-toast";
+import {
+  useAddCategoryMutation,
+  useGetAllCategoriesQuery,
+  useUpdateCategoryMutation,
+} from "../../../global/api/categoryApi";
 
 const CategoryEditor: React.FC<Props> = ({
   category,
   setEditMode,
   editMode,
 }) => {
+  const { data } = useGetAllCategoriesQuery();
   const [eCategory, setCategory] = useState(
     category
       ? category
       : {
-          id: categories.length+1,
-          categoryTranslations: [],
+        id: 1,
+        categoryTranslations: [
+          {
+            name: "Hii",
+            languageCode: "az",
+          },
+        ],
         },
   );
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [addCategory] = useAddCategoryMutation();
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (category) {
+      updateCategory(eCategory);
       toast.success("Category updated successfully");
     } else {
       categories.push(eCategory);
+      console.log(categories);
+      console.log("hello from adding operation :)");
+      console.log(eCategory);
+
+      const dataa = eCategory;
+      console.log(dataa);
+      addCategory(dataa);
       setCategory({
-        id: categories.length+1,
         categoryTranslations: [],
-      })
+      });
       toast.success("Category added successfully");
     }
     setEditMode(false);
@@ -58,11 +78,11 @@ const CategoryEditor: React.FC<Props> = ({
   };
 
   const addTranslation = () => {
-    const newTranslation: CategoryTranslation = {
-      languageCode: "",
-      name: "",
+    const newTranslation = {
+      name: "Hii",
+      languageCode: "az",
     };
-    const updatedTranslations: CategoryTranslation[] = [
+    const updatedTranslations: any[] = [
       ...eCategory.categoryTranslations,
       newTranslation,
     ];

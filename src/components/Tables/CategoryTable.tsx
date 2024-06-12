@@ -2,12 +2,13 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { blogs, categories } from "@/lib/options";
-import Blog from "./Blog";
-import BlogEditor from "./BlogEditor";
 import CategoryEditor from "./CategoryEditor";
 import Category from "./Category";
+import { useDeleteCategoryMutation, useGetAllCategoriesQuery } from "../../../global/api/categoryApi";
 
 const CategoryTable = () => {
+  const { data, isLoading, error } = useGetAllCategoriesQuery();
+  const [deleteCategory] = useDeleteCategoryMutation();
   const [editMode, setEditMode] = useState(false);
   const [categoryDum, setCategories] = useState(categories);
 
@@ -22,6 +23,7 @@ const CategoryTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        deleteCategory(id);
         const updatedCategories = [...categoryDum];
         updatedCategories.splice(id, 1);
         setCategories(updatedCategories);
@@ -69,13 +71,13 @@ const CategoryTable = () => {
           </thead>
 
           <tbody>
-            {categoryDum.map((categories, index) => (
+            {data?.map((categories, index) => (
               <>
                 <tr>
                   <Category key={categories.id}  category={categories}/>
                   <td>
                     <button
-                      onClick={() => deleteHandle(index)}
+                      onClick={() => deleteHandle(categories.id)}
                       className="hover:text-primary"
                     > 
                       <svg

@@ -4,8 +4,11 @@ import Swal from "sweetalert2";
 import { blogs } from "@/lib/options";
 import Blog from "./Blog";
 import BlogEditor from "./BlogEditor";
+import { useDeleteBlogMutation, useGetAllBlogsQuery } from "../../../global/api/blogsApi";
 
 const BlogTable = () => {
+  const { data, isLoading, error } = useGetAllBlogsQuery();
+  const [deleteBlog] = useDeleteBlogMutation();
   const [editMode, setEditMode] = useState(false);
   const [blogDum, setBlogs] = useState(blogs);
 
@@ -20,6 +23,7 @@ const BlogTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        deleteBlog(id);
         const updatedBlogs = [...blogDum];
         updatedBlogs.splice(id, 1);
         setBlogs(updatedBlogs);
@@ -67,7 +71,7 @@ const BlogTable = () => {
           </thead>
 
           <tbody>
-            {blogDum.map((blogs, index) => (
+            {data?.map((blogs, index) => (
               <>
               
                 <tr key={index} >
@@ -75,7 +79,7 @@ const BlogTable = () => {
 
                   <td>
                     <button
-                      onClick={() => deleteHandle(index)}
+                      onClick={() => deleteHandle(blogs.id)}
                       className="hover:text-primary"
                     >
                       <svg
