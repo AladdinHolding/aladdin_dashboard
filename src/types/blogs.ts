@@ -12,3 +12,12 @@ export type Blogs = {
   imageUrl: string;
   blogTranslations: BlogTranslations[];
 };
+
+
+export type BlogEdit={
+  id: number;
+  isMain: boolean;
+  ImageFile: any;
+  CategoryId: number;
+  BlogTranslations: BlogTranslations[];
+}
