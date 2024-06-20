@@ -57,6 +57,8 @@ const blogs: Blogs[] = [
   },
 ];
 
+const languageCodes: string[]=["az","ru","en"]
+
 const categories: Category[] = [
   {
     id: 1,
@@ -91,4 +93,4 @@ const categories: Category[] = [
   },
 ];
 
-export { blogs, categories };
+export { blogs, categories, languageCodes };

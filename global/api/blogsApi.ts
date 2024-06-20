@@ -6,7 +6,7 @@ export const blogsApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://aladdincreative-001-site1.btempurl.com/api/v1/Blog/",
     prepareHeaders: (headers, { getState }) => {
-      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4MzYwMzQzLCJleHAiOjE3MTgzNjM5NDMsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.eQoCg5367YBsR8SdGtfwY94prmnS6JMvLG38gcfVOcA')
+      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4ODgxMTkwLCJleHAiOjE3MTg4ODQ3OTAsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.tYkEm2P84j1odNwCWNwYCGe4dZUJZrYRIyBF-dYRSE4')
       return headers;
     },
   }),
@@ -19,11 +19,11 @@ export const blogsApi = createApi({
       }),
       providesTags:['Blogs']
     }),
-    getBlogsById: builder.query<Blogs, void>({
-      query: (id) => ({
+    getBlogsById: builder.query<Blogs, any>({
+      query: (params) => ({
         url: `GetById`,
         method: "GET",
-        params: { id },
+        params,
       }),
       providesTags:['Blogs']
     }),

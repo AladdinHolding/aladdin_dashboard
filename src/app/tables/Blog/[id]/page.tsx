@@ -1,9 +1,9 @@
-import BlogDetails from "@/components/Tables/BlogDetails";
-import { Props } from "react-apexcharts";
+// import BlogDetails from "@/components/Tables/BlogDetails";
+// import { Props } from "react-apexcharts";
 
- const BlogById: React.FC<Props> = ({params})=>{
+//  const BlogById: React.FC<Props> = ({params})=>{
 
-  return <><BlogDetails id={params.id}></BlogDetails></>
-}
+//   return <><BlogDetails id={params.id}></BlogDetails></>
+// }
 
-export default BlogById
+// export default BlogById
