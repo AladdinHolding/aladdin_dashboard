@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { blogs } from "@/lib/options";
 import Blog from "./Blog";
@@ -8,7 +8,8 @@ import { useDeleteBlogMutation, useGetAllBlogsQuery } from "../../../global/api/
 import Link from "next/link";
 
 const BlogTable = () => {
-  const { data, isLoading, error } = useGetAllBlogsQuery();
+  const [languageCode,setLanguageCode] = useState('az')
+  const { data, isLoading, error } = useGetAllBlogsQuery(languageCode);
   const [deleteBlog] = useDeleteBlogMutation();
   const [editMode, setEditMode] = useState(false);
   const [blogDum, setBlogs] = useState(blogs);
@@ -41,6 +42,11 @@ const BlogTable = () => {
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <select onChange={(e)=> setLanguageCode(e.target.value)}>
+        <option>az</option>
+        <option>en</option>
+        <option>ru</option>
+      </select>
       <div className="max-w-full overflow-x-auto">
         <div className="flex items-center justify-center p-2.5 xl:p-5">
           <>
@@ -76,7 +82,7 @@ const BlogTable = () => {
               <>
               
                 <tr key={index} >
-                  <Blog key={blogs.id} blog={blogs} />
+                  <Blog key={blogs.id} languageTranslation={languageCode} blog={blogs} />
 
                   <td>
                     <button

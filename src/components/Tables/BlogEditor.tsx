@@ -14,82 +14,81 @@ import { Formik, useFormik } from "formik";
 
 const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
   const [image, setImage] = useState<File>();
-  const [main, setMainStatus] = useState(false);
+  const translation: BlogTranslations = {
+    languageCode: 'az',
+    title: "",
+    description: "",
+  };
   const [preview, setPreview] = useState(blog ? blog.imageUrl : "");
   const [updateBlogs] = useUpdateBlogMutation();
-  // const [getBlog] = useGetBlogsByIdQuery();
   const [addBlogs] = useAddBlogMutation();
   const { data } = useGetAllCategoriesQuery();
-  const { values, handleChange, handleBlur, handleSubmit } =
-    useFormik<BlogEdit>({
-      initialValues: blog
-        ? {
-            ...blog,
-            BlogTranslations: blog.blogTranslations,
-            ImageFile: image,
-          }
-        : {
-            ImageFile: image,
-            isMain: false,
-            CategoryId: data?.[0].id,
-            BlogTranslations: [
-              {
-                languageCode: "az",
-                title: "string",
-                description: "string",
-              },
-              {
-                languageCode: "ru",
-                title: "string",
-                description: "string",
-              },
-              {
-                languageCode: "en",
-                title: "string",
-                description: "string",
-              },
-            ],
-          },
-      validateOnChange: true,
-      onSubmit: (values) => {
-        const formData = new FormData();
-        blog ? formData.append("id", blog.id) : null;
-        formData.append("isMain", values.isMain.toString());
-        formData.append("CategoryId", values.CategoryId.toString());
-        formData.append("ImageFile", image!);
-
-        values.BlogTranslations.forEach((translation, index) => {
-          formData.append(
-            `BlogTranslations[${index}]`,
-            JSON.stringify(translation),
-          );
-        });
-        console.log(image);
-        if (blog) {
-          updateBlogs(formData);
-        } else {
-          addBlogs(formData);
+  const { values, handleChange, handleSubmit } = useFormik<BlogEdit>({
+    initialValues: blog
+      ? {
+          ...blog,
+          BlogTranslations: blog.blogTranslations,
+          ImageFile: image,
         }
-        setEditMode(false);
-      },
+      : {
+          ImageFile: image,
+          isMain: false,
+          CategoryId: data?.[0].id,
+          BlogTranslations: [
+            {
+              languageCode: "az",
+              title: "string",
+              description: "string",
+            },
+          ],
+        },
+    onSubmit: (values) => {
+      const formData = new FormData();
+      blog ? formData.append("id", blog.id) : null;
+      formData.append("isMain", values.isMain.toString());
+      formData.append("CategoryId", values.CategoryId.toString());
+      formData.append("ImageFile", image!);
+      console.log(values.BlogTranslations[1]);
+      values.BlogTranslations.forEach((translation, index) => {
+        formData.append(
+          `BlogTranslations[${index}]`,
+          JSON.stringify(translation),
+        );
+      });
+      console.log(image);
+      if (blog) {
+        updateBlogs(formData);
+        toast.success("Blog Edited Successfully");
+      } else {
+        addBlogs(formData);
+        toast.success("Blog Created Successfully");
+      }
+      setEditMode(false);
+    },
+  });
+  const useBlogByIdAndLanguage = (blogId: number, languageCode: string) => {
+    const { data, isLoading, isError } = useGetBlogsByIdQuery({
+      blogId,
+      languageCode,
     });
-    const getLanguageTranslation = (code:string)=>{
-      // getBlog({blog.id, code})
-    }
+    return { data, isLoading, isError };
+  };
   console.log(values.BlogTranslations);
   return (
     <div
-      className={`fixed ${editMode ? null : "hidden"} inset-0 flex justify-center items-center bg-black bg-opacity-25 backdrop-blur-sm`}
+      className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm`}
     >
-      
       <div
-        className="dark:bg-gray-800 w-1/4 flex-col  items-center justify-center  
+        className="dark:bg-gray-800 flex-col  items-center justify-center  
                justify-items-center   overflow-y-auto rounded-lg  border bg-white p-6 text-center"
       >
         <form onSubmit={handleSubmit}>
           <button onClick={() => setEditMode(false)}>X</button>
           <div>
-            <label className="text-gray-700 dark:text-gray-300 block text-sm font-medium">
+            <label
+              htmlFor="file"
+              className="text-gray-700 dark:text-gray-300 block text-sm font-medium"
+            >
               Image
             </label>
             <label htmlFor="file" className="cursor-pointer">
@@ -142,39 +141,36 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
           </div>
           <div>
             <label>Translation</label>
+            <div>
+              <button onClick={() => values.BlogTranslations.push(translation)}>
+                +
+              </button>
+            </div>
             {values.BlogTranslations.map((translation, index) => (
-              <>
+              <div key={index}>
                 <div>
-                  <select
-                    name={`BlogTranslations[${index}].languageCode`}
-                    value={translation.languageCode}
-                    onChange={handleChange}
-                  >
-                    {languageCodes.map((code, index) => (
-                      <>
-                        <option value={code}>{code}</option>
-                      </>
-                    ))}
-                  </select>
+                  <p>{translation.languageCode}</p>
                 </div>
                 <div>
                   <div>Title</div>
                   <input
                     name={`BlogTranslations[${index}].title`}
                     value={translation.title}
+                    className="border-2	"
                     onChange={handleChange}
                   />
                 </div>
                 <div>
-                <div>Description</div>
+                  <div>Description</div>
 
                   <textarea
                     name={`BlogTranslations[${index}].description`}
                     value={translation.description}
+                    className="border-2	"
                     onChange={handleChange}
                   />
                 </div>
-              </>
+              </div>
             ))}
           </div>
           <div>
@@ -187,8 +183,9 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
               {data?.map((category, index) => {
                 return (
                   <>
-                    <option value={category.id}>{
-                    category.categoryTranslations[0].name}</option>
+                    <option value={category.id}>
+                      {category.categoryTranslations[0].name}
+                    </option>
                   </>
                 );
               })}

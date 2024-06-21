@@ -15,7 +15,7 @@ const Category: React.FC<Props> = ({ category }) => {
       <td>{category.id}</td>
       <td className="flex">
         {category.categoryTranslations.map((translation:CategoryTranslation, index:number) => (
-          <><p className="m-3">{translation.languageCode}</p></>
+          <><p key={index} className="m-3">{translation.languageCode}</p></>
         ))}
       </td>
       <td>

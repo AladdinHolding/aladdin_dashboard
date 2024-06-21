@@ -6,7 +6,7 @@ import {
   useUpdateCategoryMutation,
 } from "../../../global/api/categoryApi";
 import { useFormik } from "formik";
-import { Category } from "@/types/category";
+import { Category, CategoryTranslation } from "@/types/category";
 
 const CategoryEditor: React.FC<Props> = ({
   category,
@@ -15,6 +15,10 @@ const CategoryEditor: React.FC<Props> = ({
 }) => {
   const [updateCategories] = useUpdateCategoryMutation();
   const [addCategories] = useAddCategoryMutation();
+  const translation: CategoryTranslation = {
+    languageCode:'',
+    name:'',
+  }
   const { values, handleChange, handleSubmit } = useFormik<Category>({
     initialValues: category
       ? {
@@ -26,14 +30,6 @@ const CategoryEditor: React.FC<Props> = ({
               languageCode: "az",
               name: "string",
               description: "string",
-            },
-            {
-              languageCode: "ru",
-              name: "string",
-            },
-            {
-              languageCode: "en",
-              name: "string",
             },
           ],
         },
@@ -60,9 +56,10 @@ const CategoryEditor: React.FC<Props> = ({
       >
         <button className="justify-items-left items-start" onClick={() => setEditMode(false)}>X</button>
         <form onSubmit={handleSubmit}>
+        <button onClick={()=> values.categoryTranslations.push(translation)}>+</button>
 
           {values.categoryTranslations.map((translation, index) => (
-            <>
+            <div key={index}>
               <div>
                 <div>
                   <label>Language Code</label>
@@ -83,7 +80,7 @@ const CategoryEditor: React.FC<Props> = ({
                   onChange={handleChange}
                 />
               </div>
-            </>
+            </div>
           ))}
           <div></div>
           <input type="submit" value={"Submit"} />

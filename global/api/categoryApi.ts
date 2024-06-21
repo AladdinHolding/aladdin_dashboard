@@ -7,18 +7,21 @@ export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://aladdincreative-001-site1.btempurl.com/api/v1/Category/",
     prepareHeaders: (headers, { getState }) => {
-      headers.set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4ODgxMTkwLCJleHAiOjE3MTg4ODQ3OTAsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.tYkEm2P84j1odNwCWNwYCGe4dZUJZrYRIyBF-dYRSE4')
+      headers.set(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4OTU1NjUzLCJleHAiOjE3MTg5NTkyNTMsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.wg30LO29l_Dbsy1nY0wjPVWUso38DoUa7mE4Dc88x8U",
+      );
       return headers;
     },
   }),
-  tagTypes: ['Blogs','Categories'],
+  tagTypes: ["Blogs", "Categories"],
   endpoints: (builder) => ({
     getAllCategories: builder.query<Category[], void>({
       query: () => ({
         url: "GetAll",
         method: "GET",
       }),
-      providesTags: ['Categories'],
+      providesTags: ["Categories"],
     }),
     getBlogsByCategoryId: builder.query<Blogs[], number>({
       query: (id) => ({
@@ -26,13 +29,13 @@ export const categoryApi = createApi({
         method: "GET",
         params: { id },
       }),
-      providesTags: ['Categories'],
+      providesTags: ["Categories"],
     }),
-    getCategoryById: builder.query<Category, number>({
-      query: (id) => ({
+    getCategoryById: builder.query<Category, any>({
+      query: ({ id, languageCode='' }) => ({
         url: `GetById`,
         method: "GET",
-        params: { id },
+        params: { id, languageCode },
       }),
     }),
     updateCategory: builder.mutation<Category, Category>({
@@ -41,16 +44,15 @@ export const categoryApi = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags:['Categories']
+      invalidatesTags: ["Categories"],
     }),
     addCategory: builder.mutation<Category, Category>({
       query: (body) => ({
         url: `Create`,
         method: "POST",
         body,
-        
       }),
-      invalidatesTags:['Categories']
+      invalidatesTags: ["Categories"],
     }),
     deleteCategory: builder.mutation<any, number>({
       query: (id) => ({
@@ -58,9 +60,9 @@ export const categoryApi = createApi({
         method: "Delete",
         params: { id },
       }),
-      invalidatesTags:['Categories']
+      invalidatesTags: ["Categories"],
     }),
-  }), 
+  }),
 });
 
 export const {

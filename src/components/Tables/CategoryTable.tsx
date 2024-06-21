@@ -79,9 +79,9 @@ const CategoryTable = () => {
           </thead>
 
           <tbody>
-            {data?.map((categories) => (
+            {data?.map((categories,index) => (
               <>
-                <tr>
+                <tr key={index}>
                   <Category key={categories.id} category={categories} />
                   <td>
                     <button
