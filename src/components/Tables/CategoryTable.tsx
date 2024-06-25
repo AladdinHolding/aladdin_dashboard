@@ -11,7 +11,9 @@ import {
 import Link from "next/link";
 
 const CategoryTable = () => {
-  const { data, isLoading, error } = useGetAllCategoriesQuery();
+  const [languageCode, setLanguageCode] = useState("az");
+
+  const { data, isLoading, error } = useGetAllCategoriesQuery(languageCode);
   const [deleteCategory] = useDeleteCategoryMutation();
   const [editMode, setEditMode] = useState(false);
   const [categoryDum, setCategories] = useState(categories);
@@ -19,7 +21,7 @@ const CategoryTable = () => {
   const deleteHandle = (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You won't be able to revert this! In Addition all of the blogs belongs to this category will be deleted permenantly",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#EA580C",
@@ -32,10 +34,9 @@ const CategoryTable = () => {
         const updatedCategories = [...categoryDum];
         updatedCategories.splice(id, 1);
         setCategories(updatedCategories);
-        console.log(id);
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Category has been deleted.",
           icon: "success",
           confirmButtonColor: "#EA580C",
         });
@@ -45,6 +46,11 @@ const CategoryTable = () => {
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <select onChange={(e) => setLanguageCode(e.target.value)}>
+        <option>az</option>
+        <option>en</option>
+        <option>ru</option>
+      </select>
       <div className="max-w-full overflow-x-auto">
         <div className="flex items-center justify-center p-2.5 xl:p-5">
           <></>
@@ -79,8 +85,7 @@ const CategoryTable = () => {
           </thead>
 
           <tbody>
-            {data?.map((categories,index) => (
-              <>
+            {data?.map((categories, index) => (
                 <tr key={index}>
                   <Category key={categories.id} category={categories} />
                   <td>
@@ -116,7 +121,6 @@ const CategoryTable = () => {
                     </button>
                   </td>
                 </tr>
-              </>
             ))}
           </tbody>
         </table>

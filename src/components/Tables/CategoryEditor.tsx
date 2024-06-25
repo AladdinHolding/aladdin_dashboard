@@ -16,9 +16,9 @@ const CategoryEditor: React.FC<Props> = ({
   const [updateCategories] = useUpdateCategoryMutation();
   const [addCategories] = useAddCategoryMutation();
   const translation: CategoryTranslation = {
-    languageCode:'',
-    name:'',
-  }
+    languageCode: "",
+    name: "",
+  };
   const { values, handleChange, handleSubmit } = useFormik<Category>({
     initialValues: category
       ? {
@@ -35,7 +35,6 @@ const CategoryEditor: React.FC<Props> = ({
         },
     validateOnChange: true,
     onSubmit: (values) => {
-      console.log(values);
 
       if (category) {
         updateCategories(values);
@@ -54,34 +53,36 @@ const CategoryEditor: React.FC<Props> = ({
         className="dark:bg-gray-800 w-1/4 flex-col  items-center justify-center  
         justify-items-center   overflow-y-auto rounded-lg  border bg-white p-6 text-center"
       >
-        <button className="justify-items-left items-start" onClick={() => setEditMode(false)}>X</button>
+        <button
+          className="justify-items-left items-start"
+          onClick={() => setEditMode(false)}
+        >
+          X
+        </button>
         <form onSubmit={handleSubmit}>
-        <button onClick={()=> values.categoryTranslations.push(translation)}>+</button>
-
-          {values.categoryTranslations.map((translation, index) => (
-            <div key={index}>
-              <div>
+        <button onClick={() => values.categoryTranslations.push(translation)} className="cursor-pointer">+</button>
+        <div className="flex flex-wrap">
+            {values.categoryTranslations.map((translation, index) => (
+              <div key={index}>
                 <div>
-                  <label>Language Code</label>
+                  <select onChange={handleChange} name={`categoryTranslations[${index}].languageCode`}>
+                    <option>az</option>
+                    <option>en</option>
+                    <option>ru</option>
+                  </select>
                 </div>
-                <input
-                  name={`categoryTranslations[${index}].languageCode`}
-                  value={translation.languageCode}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
                 <div>
-                  <label>Name</label>
+                  <div>Name</div>
+                  <input
+                    name={`categoryTranslations[${index}].name`}
+                    value={translation.name}
+                    className="border-2	"
+                    onChange={handleChange}
+                  />
                 </div>
-                <input
-                  name={`categoryTranslations[${index}].name`}
-                  value={translation.name}
-                  onChange={handleChange}
-                />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
           <div></div>
           <input type="submit" value={"Submit"} />
         </form>

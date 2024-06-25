@@ -23,9 +23,7 @@ const Blog: React.FC<Props> = ({ blog, languageTranslation }) => {
           </td>
           <td className="flex">
             {blog.blogTranslations.map((translations: any,index:number) => (
-              <>
                 <p key={index} className="m-2">{translations.languageCode}</p>
-              </>
             ))}
           </td>
           <>

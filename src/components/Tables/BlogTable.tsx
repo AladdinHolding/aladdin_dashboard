@@ -17,22 +17,22 @@ const BlogTable = () => {
   const deleteHandle = (id: number) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "The Blog Will Be Deleted Permenantly!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#EA580C",
       cancelButtonColor: "#8F8C00",
       confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, Don't do it!",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteBlog(id);
         const updatedBlogs = [...blogDum];
         updatedBlogs.splice(id, 1);
         setBlogs(updatedBlogs);
-        console.log(id);
         Swal.fire({
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Blog has been deleted.",
           icon: "success",
           confirmButtonColor: "#EA580C",
         });
@@ -79,8 +79,7 @@ const BlogTable = () => {
 
           <tbody>
             {data?.map((blogs, index) => (
-              <>
-              
+             
                 <tr key={index} >
                   <Blog key={blogs.id} languageTranslation={languageCode} blog={blogs} />
 
@@ -117,7 +116,6 @@ const BlogTable = () => {
                     </button>
                   </td>
                 </tr>
-              </>
             ))}
           </tbody>
         </table>

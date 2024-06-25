@@ -7,19 +7,24 @@ export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://aladdincreative-001-site1.btempurl.com/api/v1/Category/",
     prepareHeaders: (headers, { getState }) => {
-      headers.set(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYmxvZ2FkbWluIiwibmJmIjoxNzE4OTU1NjUzLCJleHAiOjE3MTg5NTkyNTMsImlzcyI6IllvdXJJc3N1ZXJIZXJlIiwiYXVkIjoiWW91ckF1ZGllbmNlSGVyZSJ9.wg30LO29l_Dbsy1nY0wjPVWUso38DoUa7mE4Dc88x8U",
-      );
+      const token = localStorage.getItem('auth');
+      if(token){
+        headers.set(
+          "Authorization",
+          `Bearer ${token}`,
+        );
+        
+      }
       return headers;
     },
   }),
   tagTypes: ["Blogs", "Categories"],
   endpoints: (builder) => ({
-    getAllCategories: builder.query<Category[], void>({
-      query: () => ({
+    getAllCategories: builder.query<Category[], any>({
+      query: (languageCode) => ({
         url: "GetAll",
         method: "GET",
+        params: {languageCode}
       }),
       providesTags: ["Categories"],
     }),
