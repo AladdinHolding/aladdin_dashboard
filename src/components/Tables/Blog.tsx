@@ -1,11 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Props } from "react-apexcharts";
 import BlogEditor from "./BlogEditor";
-import { useGetBlogsByIdQuery } from "../../../global/api/blogsApi";
 
-const Blog: React.FC<Props> = ({ blog, languageTranslation }) => {
+const Blog: React.FC<Props> = ({ blog }) => {
   const [editMode, setEditMode] = useState(false);
   const isMainT = blog.isMain ? "True" : "False";
   const image = blog.imageUrl;

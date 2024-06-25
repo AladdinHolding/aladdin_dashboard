@@ -4,11 +4,10 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { useLoginMutation } from "../../../global/api/authApi";
-import { cookies, headers } from "next/headers";
 import axios from "axios";
 import { createSession } from "@/lib/session";
 import toast from "react-hot-toast";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const LogIn: React.FC = () => {
   const router = useRouter()

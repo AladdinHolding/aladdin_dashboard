@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { blogs, languageCodes } from "@/lib/options";
+import React, { useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { Props } from "react-apexcharts";
-import { BlogEdit, BlogTranslations, Blogs } from "@/types/blogs";
+import { BlogEdit, BlogTranslations } from "@/types/blogs";
 import {
   useAddBlogMutation,
-  useGetBlogsByIdQuery,
   useUpdateBlogMutation,
 } from "../../../global/api/blogsApi";
 import { useGetAllCategoriesQuery } from "../../../global/api/categoryApi";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 
 const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
   const [image, setImage] = useState<File>();
@@ -37,8 +35,18 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
           BlogTranslations: [
             {
               languageCode: "az",
-              title: "string",
-              description: "string",
+              title: "",
+              description: "",
+            },
+            {
+              languageCode: "en",
+              title: "",
+              description: "",
+            },
+            {
+              languageCode: "ru",
+              title: "",
+              description: "",
             },
           ],
         },
@@ -66,13 +74,6 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
       setEditMode(false);
     },
   });
-  const useBlogByIdAndLanguage = (blogId: number, languageCode: string) => {
-    const { data, isLoading, isError } = useGetBlogsByIdQuery({
-      blogId,
-      languageCode,
-    });
-    return { data, isLoading, isError };
-  };
   return (
     <div
       className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm`}

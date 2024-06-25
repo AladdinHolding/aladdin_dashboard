@@ -2,7 +2,6 @@ import React from "react";
 import { Props } from "react-apexcharts";
 import {
   useAddCategoryMutation,
-  useGetAllCategoriesQuery,
   useUpdateCategoryMutation,
 } from "../../../global/api/categoryApi";
 import { useFormik } from "formik";
@@ -28,8 +27,16 @@ const CategoryEditor: React.FC<Props> = ({
           categoryTranslations: [
             {
               languageCode: "az",
-              name: "string",
-              description: "string",
+              name: "",
+              description: "",
+            },{
+              languageCode: "en",
+              name: "",
+              description: "",
+            },{
+              languageCode: "ru",
+              name: "",
+              description: "",
             },
           ],
         },
