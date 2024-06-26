@@ -1,7 +1,11 @@
 "use server";
-import { SignJWT, jwtVerify } from "jose"
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 
 export const createSession= (token:string)=>{
     cookies().set('auth', token);
+}
+
+
+export const deleteSession= ()=>{
+    cookies().delete('auth');
 }

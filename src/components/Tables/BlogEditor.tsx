@@ -12,11 +12,6 @@ import { useFormik } from "formik";
 
 const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
   const [image, setImage] = useState<File>();
-  const translation: BlogTranslations = {
-    languageCode: "az",
-    title: "",
-    description: "",
-  };
   const [preview, setPreview] = useState(blog ? blog.imageUrl : "");
   const [updateBlogs] = useUpdateBlogMutation();
   const [addBlogs] = useAddBlogMutation();
@@ -55,7 +50,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
       blog ? formData.append("id", blog.id) : null;
       formData.append("isMain", values.isMain.toString());
       formData.append("CategoryId", values.CategoryId.toString());
-      formData.append("ImageFile", image!);
+      formData.append("ImageFile", preview!);
       values.BlogTranslations.forEach((translation, index) => {
         formData.append(
           `BlogTranslations[${index}]`,
@@ -63,13 +58,13 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
         );
       });
       if (blog) {
-        updateBlogs(formData).then(() =>
-          toast.success("Blog Edited Successfully"),
-        );
+        updateBlogs(formData)
+          .then(() => toast.success("Blog Edited Successfully"))
+          .catch((err) => toast.error(err));
       } else {
-        addBlogs(formData).then(() =>
-          toast.success("Blog Created Successfully"),
-        );
+        addBlogs(formData)
+          .then(() => toast.success("Blog Created Successfully"))
+          .catch((err) => toast.error(err));
       }
       setEditMode(false);
     },
@@ -78,10 +73,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
     <div
       className={`fixed ${editMode ? null : "hidden"} inset-0 flex items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm`}
     >
-      <div
-        className="dark:bg-gray-800 flex-col  items-center justify-center  
-               justify-items-center   overflow-y-auto rounded-lg  border bg-white p-6 text-center"
-      >
+      <div className="dark:bg-gray-800 flex-col  items-center justify-center justify-items-center   overflow-y-auto rounded-lg  border bg-white p-6 text-center">
         <form onSubmit={handleSubmit}>
           <button onClick={() => setEditMode(false)}>X</button>
           <div>
@@ -141,14 +133,6 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
           </div>
           <div>
             <label>Translation</label>
-            <div>
-              <button
-                onClick={() => values.BlogTranslations.push(translation)}
-                className="cursor-pointer"
-              >
-                +
-              </button>
-            </div>
             <div className="flex flex-wrap">
               {values.BlogTranslations.map((translation, index) => (
                 <div key={index}>
@@ -160,7 +144,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
                     <input
                       name={`BlogTranslations[${index}].title`}
                       value={translation.title}
-                      className="border-2	"
+                      className="m-2	border-2"
                       onChange={handleChange}
                     />
                   </div>
@@ -170,7 +154,7 @@ const BlogEditor: React.FC<Props> = ({ blog, editMode, setEditMode }) => {
                     <textarea
                       name={`BlogTranslations[${index}].description`}
                       value={translation.description}
-                      className="border-2	"
+                      className="m-2	border-2"
                       onChange={handleChange}
                     />
                   </div>

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { useLoginMutation } from "../../../global/api/authApi";
-import axios from "axios";
 import { createSession } from "@/lib/session";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -20,7 +19,6 @@ const LogIn: React.FC = () => {
     onSubmit: (values) => {
       LogIn(values).then((value) => {
         createSession(value.data.token.accessToken);
-        axios.defaults.headers.common['auth'] = `Bearer ${value.data.token.accessToken}`;
         localStorage.setItem('auth',value.data.token.accessToken)
         let token = localStorage.getItem('auth')
         console.log(token);
