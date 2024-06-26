@@ -1,14 +1,20 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { deleteSession } from "./lib/session";
-import Swal from "sweetalert2";
 
 export default function middleware(request: NextRequest) {
   const pathSegments = request.url.split("/");
+  console.log(request.nextUrl.pathname);
   const lastSegment = pathSegments[pathSegments.length - 1];
-
-  if (lastSegment === "tables") {
+  if (
+    lastSegment === "tables" ||
+    lastSegment === "calendar" ||
+    lastSegment === "profile" ||
+    lastSegment === "settings" ||
+    lastSegment === "form-layout" ||
+    lastSegment === "form-elements" ||
+    request.nextUrl.href === `${request.nextUrl.origin}/`
+  ) {
     const token = cookies().get("auth")?.value;
     console.log(token);
     if (token) {
@@ -21,4 +27,6 @@ export default function middleware(request: NextRequest) {
     }
     return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
+  return NextResponse.next();
+
 }
